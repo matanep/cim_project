@@ -9,7 +9,7 @@ import datetime
 
 class NaoNode():
     def __init__(self):
-        self.robotIP = '192.168.0.100'
+        self.robotIP = '192.168.0.104'
         self.port = 9559
 
         try:
@@ -33,7 +33,6 @@ class NaoNode():
 
 
         self.communicating = False
-        self.nao_movements = rospy.Publisher ('nao_movements', String)
         self.robot_running = True
 
         self.counter=0
@@ -42,16 +41,18 @@ class NaoNode():
     def start(self):
         #init a listener to kinect and
         rospy.init_node('nao_listener')
-        rospy.Subscriber('language', String, self.language)
-        rospy.Subscriber("the_flow", String, self.worker())
-        rospy.Subscriber("text_to_say", String, self.say())
+        rospy.Subscriber('robot_language', String, self.language)
+        rospy.Subscriber("robot_command", String, self.worker)
         rospy.spin()
 
 
     def worker(self, data):
-        if 'the end' in data.data:
-            self.motionProxy.rest()
-            self.robot_running = False
+        behavior_and_text_str=data.data
+        behavior_and_text_list=behavior_and_text_str.split(";")
+        behavior=behavior_and_text_list[0]
+        text=behavior_and_text_list[1]
+        self.do_behavior(behavior)
+        self.say(text)
 
     def language(self, data):
         if 'English' in data.data:
@@ -64,8 +65,8 @@ class NaoNode():
         self.managerProxy.post.runBehavior(behaviorName)
 
 
-    def say(self,data):
-        self.tts.say(data.data)
+    def say(self,text):
+        self.tts.say(text)
 
 
 

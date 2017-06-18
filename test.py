@@ -6,7 +6,7 @@ import almath
 import time
 import datetime
 
-robotIP='192.168.0.106'
+robotIP='192.168.0.104'
 port=9559
 
 motionProxy = ALProxy("ALMotion", robotIP, port)
@@ -14,11 +14,17 @@ audioProxy = ALProxy("ALAudioPlayer", robotIP, port)
 postureProxy = ALProxy("ALRobotPosture", robotIP, port)
 managerProxy = ALProxy("ALBehaviorManager", robotIP, port)
 tts = ALProxy("ALTextToSpeech", robotIP, port)
+tts.setLanguage('English')
 
 tts.say('hey adir hahahahahahaha')
-managerProxy.post.runBehavior('introduction_all_0-ba154e')
+managerProxy.post.runBehavior('Stand/Waiting/ShowSky_2')
 tts.say('hola, como estas')
 
 tts.setLanguage('Spanish')
 tts.say('hola, como estas')
 tts.setLanguage('English')
+
+
+import redis
+r = redis.StrictRedis('localhost', 6379, 1, decode_responses=True, charset='utf-8')
+print r.get('lang:')

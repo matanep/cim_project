@@ -13,7 +13,7 @@ class Redis():
         rospy.init_node('redis_publisher')
         self.lang = rospy.Publisher ('language', String)
         self.flow = rospy.Publisher ('the_flow', String)
-        self.name = rospy.Publisher ('name', String)
+        self.uname = rospy.Publisher ('name', String)
         self.flag=True
 
         self.initialize()
@@ -22,29 +22,33 @@ class Redis():
         self.language=str
         self.the_flow=str
         self.name=str
-        self.r = redis.StrictRedis('localhost', 6379, 0, decode_responses=True, charset='utf-8')
+        self.r = redis.StrictRedis('localhost', 6379, 1, decode_responses=True, charset='utf-8')
 
         self.redis_listener()
 
     def redis_listener(self):
         while self.flag:
-            language = self.r.get('language' + ':kivun') #todo
-            the_flow = self.r.get('language' + ':kivun') #todo
-            name=self.r.get('language' + ':kivun')       #todo
+            language = self.r.get('lang:')
+            the_flow = self.r.get('state:')
+            name=self.r.get('name:')
 
 
             if language!=self.language:
                 self.language=language
+                print language
                 self.lang.publish(language)
 
             if name != self.name:
                 self.name = name
-                self.name.publish(name)
+                print name
+                self.uname.publish(str(name))
 
             if the_flow!=self.the_flow:
                 self.the_flow=the_flow
+                print the_flow
                 self.flow.publish(the_flow)
 
 app = Redis()
 
 
+#$ sudo /usr/local/bin/redis-server /etc/redis/redis.conf
