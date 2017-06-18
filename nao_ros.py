@@ -16,6 +16,9 @@ class NaoNode():
             self.motionProxy = ALProxy("ALMotion", self.robotIP, self.port)
             self.audioProxy = ALProxy("ALAudioPlayer", self.robotIP, self.port)
             self.postureProxy = ALProxy("ALRobotPosture", self.robotIP, self.port)
+            self.managerProxy = ALProxy("ALBehaviorManager", self.robotIP, self.port)
+            self.tts = ALProxy("ALTextToSpeech", self.robotIP, self.port)
+
         except Exception,e:
             print "Could not create proxy to ALMotion"
             print "Error was: ",e
@@ -28,7 +31,6 @@ class NaoNode():
         self.motionProxy.setCollisionProtectionEnabled('Arms', True)
         self.motionProxy.post.angleInterpolationWithSpeed(['HeadPitch'], [-0.5], 0.2)
 
-        # self.motionProxy.rest()
 
         self.communicating = False
         self.nao_movements = rospy.Publisher ('nao_movements', String)
@@ -36,44 +38,35 @@ class NaoNode():
 
         self.counter=0
 
+
     def start(self):
         #init a listener to kinect and
         rospy.init_node('nao_listener')
-        rospy.Subscriber('nao_commands', String, self.callback)
-        rospy.Subscriber("the_flow", String, self.the_end)
+        rospy.Subscriber('language', String, self.language)
+        rospy.Subscriber("the_flow", String, self.worker())
+        rospy.Subscriber("text_to_say", String, self.say())
         rospy.spin()
 
-    def the_end(self, data):
+
+    def worker(self, data):
         if 'the end' in data.data:
             self.motionProxy.rest()
             self.robot_running = False
 
-    def callback(self, data):
-        print('got message')
-        if not self.communicating and self.robot_running:
-            if self.counter%15==0:
-                self.communicating = True
+    def language(self, data):
+        if 'English' in data.data:
+            self.tts.setLanguage('English')
+        elif 'Spanish' in data.data:
+            self.tts.setLanguage('Spanish')
 
-                # data = 'name1, name2;target1, target2;pMaxSpeedFraction'
-                data_str = data.data
-                info = data_str.split(';')
-                pNames = info[0].split(',')
-                pTargetAngles = [float(x) for x in info[1].split(',')]
-                # print motionProxy.rest()pTargetAngles
 
-                pMaxSpeedFraction = float(info[2])
-                # print(pNames, pTargetAngles, pMaxSpeedFraction)
-                # self.motionProxy.post.angleInterpolationWithSpeed(pNames, pTargetAngles, pMaxSpeedFraction)
-                print('---------------------------------------------------')
-                print(datetime.datetime.now())
-                self.motionProxy.post.angleInterpolationWithSpeed(pNames, pTargetAngles, pMaxSpeedFraction)
-                print(datetime.datetime.now())
-                print(self.counter, ' #################### nao_ros ################### moved robot')
-                self.nao_movements.publish(data_str)
-                # time.sleep(0.5)
-                self.communicating = False
+    def do_behavior(self,behaviorName):
+        launchAndStopBehavior(self.managerProxy, behaviorName)
 
-            self.counter+=1
+
+    def say(self,data):
+        self.tts.say(data.data)
+
 
 
 nao = NaoNode()

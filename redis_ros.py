@@ -3,89 +3,48 @@ from std_msgs.msg import String
 import time
 import Tkinter
 import sys
+import redis
+
 
 
 class Redis():
 
     def __init__(self):
+        rospy.init_node('redis_publisher')
+        self.lang = rospy.Publisher ('language', String)
         self.flow = rospy.Publisher ('the_flow', String)
+        self.name = rospy.Publisher ('name', String)
+        self.flag=True
 
         self.initialize()
 
     def initialize(self):
-        rospy.init_node('redis')
+        self.language=str
+        self.the_flow=str
+        self.name=str
+        self.r = redis.StrictRedis('localhost', 6379, 0, decode_responses=True, charset='utf-8')
+
+        self.redis_listener()
+
+    def redis_listener(self):
+        while self.flag:
+            language = self.r.get('language' + ':kivun') #todo
+            the_flow = self.r.get('language' + ':kivun') #todo
+            name=self.r.get('language' + ':kivun')       #todo
 
 
-    def next(self):
-        print(self.state)
-        if self.state == 0:     # learn the basics
-            self.set_matrix('basic')
-            self.start()
-            time.sleep(60)
-            self.stop()
-            self.state = 1
-        elif self.state == 1:   # THE EXPERIMENT
-            which_matrix = int(self.subject_id) % 2
-            if which_matrix == 0:
-                self.set_matrix('LShoulderPitch-RShoulderRoll')
-            else:
-                self.set_matrix('LShoulderRoll-RShoulderPitch')
-            self.start()
-            time.sleep(60)
-            self.stop()
-            self.state = 2
-        elif self.state == 2:   # the tasks
-            which_matrix = int(self.subject_id) % 2
-            if which_matrix == 0:
-                self.set_matrix('LShoulderPitch-RShoulderRoll')
-            else:
-                self.set_matrix('LShoulderRoll-RShoulderPitch')
-            self.start()
-            time.sleep(30)
-            self.stop()
-            self.state = 3
-        elif self.state == 3:  # the tasks
-            which_matrix = int(self.subject_id) % 2
-            if which_matrix == 0:
-                self.set_matrix('LShoulderPitch-RShoulderRoll')
-            else:
-                self.set_matrix('LShoulderRoll-RShoulderPitch')
-            self.start()
-            time.sleep(30)
-            self.stop()
-            self.state = 4
-        elif self.state == 4:  # the tasks
-            which_matrix = int(self.subject_id) % 2
-            if which_matrix == 0:
-                self.set_matrix('LShoulderPitch-RShoulderRoll')
-            else:
-                self.set_matrix('LShoulderRoll-RShoulderPitch')
-            self.start()
-            time.sleep(30)
-            self.stop()
-            self.state = 5
+            if language!=self.language:
+                self.language=language
+                self.lang.publish(language)
 
-    def the_end(self):
-        self.stop()
-        self.flow.publish('the end')
+            if name != self.name:
+                self.name = name
+                self.name.publish(name)
 
-    def start_experiment(self):
-        self.start()
-        time.sleep(60)
-        self.stop()
+            if the_flow!=self.the_flow:
+                self.the_flow=the_flow
+                self.flow.publish(the_flow)
 
-    def set_matrix(self, which_matrix):
-        self.flow.publish(which_matrix)
-
-    def stop(self):
-        self.flow.publish('stop')
-
-    def start(self):
-        self.flow.publish('start')
-
-app = Experiment(None, int(sys.argv[1]))
-print sys.argv
-app.title('Experiment')
-app.mainloop()
+app = Redis()
 
 
