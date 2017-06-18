@@ -61,7 +61,7 @@ class NaoNode():
 
 
     def do_behavior(self,behaviorName):
-        launchAndStopBehavior(self.managerProxy, behaviorName)
+        self.managerProxy.post.runBehavior(behaviorName)
 
 
     def say(self,data):
