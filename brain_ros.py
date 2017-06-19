@@ -37,7 +37,7 @@ class Brain_Node():
             pub=self.make_str(behavior,text)#make publish str
             self.robot_command.publish(pub) #publish the str in "robot_command"
 
-        if 'id' in data.data:              #todo
+        if 'id_num' in data.data:
             behavior='Stand/Gestures/Hey_6'#todo
             if self.ulanguage=='English':
                 text='Please Insert your ID number.'
@@ -100,7 +100,7 @@ class Brain_Node():
             pub=self.make_str(behavior,text) #make publish str
             self.robot_command.publish(pub)  #publish the str in "robot_command"
 
-        if 'choice2' in data.data:          #todo
+        if 'decision' in data.data:          #todo
             behavior='Stand/Gestures/Hey_6' #todo
             if self.ulanguage=='English':
                 text='Can I help you with anything else?'
@@ -135,5 +135,8 @@ class Brain_Node():
 
     def make_str(self,behavior=str,text=str):
         return behavior +";" +text
+
+
+#todo: empty
 
 goosmart=Brain_Node()
