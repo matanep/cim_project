@@ -19,9 +19,9 @@ class Redis():
         self.initialize()
 
     def initialize(self):
-        self.language=str
-        self.the_flow=str
-        self.name=str
+        self.language='empty'
+        self.the_flow='empty'
+        self.name='empty'
         self.r = redis.StrictRedis('localhost', 6379, 1, decode_responses=True, charset='utf-8')
 
         self.redis_listener()
@@ -31,6 +31,7 @@ class Redis():
             language = self.r.get('lang:')
             the_flow = self.r.get('state:')
             name=self.r.get('name:')
+            print name+"ddd"
 
 
             if language!=self.language:
@@ -41,7 +42,7 @@ class Redis():
             if name != self.name:
                 self.name = name
                 print name
-                self.uname.publish(str(name))
+                self.uname.publish(name)
 
             if the_flow!=self.the_flow:
                 self.the_flow=the_flow

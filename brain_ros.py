@@ -10,8 +10,8 @@ class Brain_Node():
         self.robot_command = rospy.Publisher ('robot_command', String)
         self.robot_language = rospy.Publisher ('robot_language', String)
 
-        self.ulanguage=str
-        self.name=str
+        self.ulanguage='English'
+        self.uname=str
         self.start()
 
 
@@ -28,6 +28,8 @@ class Brain_Node():
     def robot_behavior(self, data):
         text=str
         behavior=str
+        print data.data
+        print self.ulanguage
         if 'hello' in data.data:
             behavior='Stand/Gestures/Hey_6'#todo
             if self.ulanguage=='English':
@@ -58,9 +60,9 @@ class Brain_Node():
         if 'choice' in data.data:
             behavior='Stand/Gestures/Hey_6' #todo
             if self.ulanguage=='English':
-                text='Hello '+ self.name +',' + ' Please choose the requested service.'
+                text='Hello '+ self.uname +',' + ' Please choose the requested service.'
             else:
-                text='Hola '+ self.name +',' + ' por favor seleccione el servicio solicitado.'
+                text='Hola '+ self.uname +',' + ' por favor seleccione el servicio solicitado.'
             pub=self.make_str(behavior,text) #make publish str
             self.robot_command.publish(pub)  #publish the str in "robot_command"
 
@@ -69,7 +71,7 @@ class Brain_Node():
             if self.ulanguage=='English':
                 text='The blood test room is on the 2nd floor, on the left'
             else:
-                text='La sala de examen de sangre está en el segundo piso, a la izquierda'
+                text='La sala de examen de sangre esta en el segundo piso, a la izquierda'
             pub=self.make_str(behavior,text) #make publish str
             self.robot_command.publish(pub)  #publish the str in "robot_command"
 
@@ -78,7 +80,7 @@ class Brain_Node():
             if self.ulanguage=='English':
                 text='The vaccination room is on the 2nd floor, on the right, next to the elevator'
             else:
-                text='La sala de la vacunación está en el segundo piso, a la derecha, al lado del ascensor'
+                text='La sala de la vacunacion esta en el segundo piso, a la derecha, al lado del ascensor'
             pub=self.make_str(behavior,text) #make publish str
             self.robot_command.publish(pub)  #publish the str in "robot_command"
 
@@ -96,7 +98,7 @@ class Brain_Node():
             if self.ulanguage=='English':
                 text='The reception is on the 1st floor, to the left'
             else:
-                text='La recepción está en la primera planta, a la izquierda'
+                text='La recepcion esta en la primera planta, a la izquierda'
             pub=self.make_str(behavior,text) #make publish str
             self.robot_command.publish(pub)  #publish the str in "robot_command"
 
@@ -114,7 +116,7 @@ class Brain_Node():
             if self.ulanguage=='English':
                 text='Thank you, and have a pleasant day!'
             else:
-                text='Gracias, y tienen un día agradable!'
+                text='Gracias, y tienen un dia agradable!'
             pub=self.make_str(behavior,text) #make publish str
             self.robot_command.publish(pub)  #publish the str in "robot_command"
 
@@ -123,20 +125,23 @@ class Brain_Node():
         if 'english' in data.data:
             self.ulanguage='English'
             self.robot_language.publish('English')
+
         elif 'spanish' in data.data:
             self.ulanguage='Spanish'
             self.robot_language.publish('Spanish')
-        else:
+
+        elif 'empty' in data.data:
             self.ulanguage='English'
             self.robot_language.publish('English')
 
     def name(self,data):
-        self.name=data.data
+        if 'empty' in data.data:
+            self.uname=str
+        else:
+            self.uname=data.data
 
     def make_str(self,behavior=str,text=str):
         return behavior +";" +text
 
-
-#todo: empty
 
 goosmart=Brain_Node()
