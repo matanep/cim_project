@@ -12,7 +12,6 @@ class Brain_Node():
 
         self.ulanguage=str
         self.name=str
-        print 'here'
         self.start()
 
 
@@ -22,7 +21,6 @@ class Brain_Node():
         rospy.Subscriber('language', String, self.language)
         rospy.Subscriber("name", String, self.name)
         rospy.Subscriber("the_flow", String, self.robot_behavior)
-        print 'here'
         rospy.spin()
 
 
@@ -120,8 +118,6 @@ class Brain_Node():
             pub=self.make_str(behavior,text) #make publish str
             self.robot_command.publish(pub)  #publish the str in "robot_command"
 
-
-
     def language(self, data):
         print 'hrhe'
         if 'english' in data.data:
@@ -133,7 +129,6 @@ class Brain_Node():
         else:
             self.ulanguage='English'
             self.robot_language.publish('English')
-
 
     def name(self,data):
         self.name=data.data
