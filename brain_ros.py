@@ -33,7 +33,7 @@ class Brain_Node():
         if 'hello' in data.data:
             behavior='Stand/Gestures/Hey_6'#todo
             if self.ulanguage=='English':
-                text='Hello, welcome to the HMO. My name is Rami, and I am here to help you.Please select a language.'
+                text='Hello, welcome to the HMO. My name is Rami, and I am here to help you....    Please select a language.'
             else:
                 text='Hola, bienvenido a la HMO. Mi nombre es Rami, y yo estoy aqui para ayudarle. Por favor, seleccione un idioma.'
             pub=self.make_str(behavior,text)#make publish str
@@ -80,14 +80,14 @@ class Brain_Node():
             if self.ulanguage=='English':
                 text='The vaccination room is on the 2nd floor, on the right, next to the elevator'
             else:
-                text='La sala de la vacunacion esta en el segundo piso, a la derecha, al lado del ascensor'
+                text='La sala de la vacunacion esta en el segundo piso, a la derecha, al lado del ascensor.'
             pub=self.make_str(behavior,text) #make publish str
             self.robot_command.publish(pub)  #publish the str in "robot_command"
 
         if 'toilet' in data.data:
             behavior='Stand/Gestures/Hey_6' #todo
             if self.ulanguage=='English':
-                text='The toilet is on the 1st floor, on your right, next to the'
+                text='The toilet is on the 1st floor, on your right, next to the vending machine.'
             else:
                 text='El inodoro esta en el 1er piso, a la derecha, junto a la'
             pub=self.make_str(behavior,text) #make publish str

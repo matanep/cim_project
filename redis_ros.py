@@ -31,7 +31,6 @@ class Redis():
             language = self.r.get('lang:')
             the_flow = self.r.get('state:')
             name=self.r.get('name:')
-            print name+"ddd"
 
 
             if language!=self.language:
