@@ -9,20 +9,25 @@ import datetime
 
 class NaoNode():
     def __init__(self):
-        self.robotIP = '192.168.0.101'
-        self.port = 9559
+        for i in range(100,200,1):
+            # self.robotIP = '192.168.0.'+str(i)
+            self.robotIP = '192.168.0.104'
+            self.port = 9559
 
-        try:
-            self.motionProxy = ALProxy("ALMotion", self.robotIP, self.port)
-            self.audioProxy = ALProxy("ALAudioPlayer", self.robotIP, self.port)
-            self.postureProxy = ALProxy("ALRobotPosture", self.robotIP, self.port)
-            self.managerProxy = ALProxy("ALBehaviorManager", self.robotIP, self.port)
-            self.tts = ALProxy("ALTextToSpeech", self.robotIP, self.port)
+            try:
+                self.motionProxy = ALProxy("ALMotion", self.robotIP, self.port)
+                self.audioProxy = ALProxy("ALAudioPlayer", self.robotIP, self.port)
+                self.postureProxy = ALProxy("ALRobotPosture", self.robotIP, self.port)
+                self.managerProxy = ALProxy("ALBehaviorManager", self.robotIP, self.port)
+                self.tts = ALProxy("ALTextToSpeech", self.robotIP, self.port)
+                break
 
-        except Exception,e:
-            print "Could not create proxy to ALMotion"
-            print "Error was: ",e
-            sys.exit(1)
+            except Exception,e:
+                if i==200:
+                    print "Could not create proxy to ALMotion"
+                    print "Error was: ",e
+                    sys.exit(1)
+
 
         # Get the Robot Configuration
         self.robotConfig = self.motionProxy.getRobotConfig()

@@ -28,3 +28,10 @@ tts.setLanguage('English')
 import redis
 r = redis.StrictRedis('localhost', 6379, 1, decode_responses=True, charset='utf-8')
 print r.get('lang:')
+
+
+
+robotConfig = motionProxy.getRobotConfig()
+motionProxy.setStiffnesses("Body", 1.0)
+postureProxy.goToPosture("StandInit", 0.5)
+motionProxy.post.angleInterpolationWithSpeed(['HeadPitch'], [-0.5], 0.2)

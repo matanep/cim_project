@@ -9,7 +9,7 @@ class Brain_Node():
     def __init__(self):
         self.robot_command = rospy.Publisher ('robot_command', String)
         self.robot_language = rospy.Publisher ('robot_language', String)
-
+        self.choice=False
         self.ulanguage='English'
         self.uname=str
         self.start()
@@ -30,8 +30,13 @@ class Brain_Node():
         behavior=str
         print data.data
         print self.ulanguage
+
+
+        if 'empty' in data.data:
+            self.choice=False
+
         if 'hello' in data.data:
-            behavior='Stand/Gestures/Hey_6'#todo
+            behavior='aom/hello'
             if self.ulanguage=='English':
                 text='Hello, welcome to the HMO. My name is Rami, and I am here to help you....    Please select a language.'
             else:
@@ -40,7 +45,7 @@ class Brain_Node():
             self.robot_command.publish(pub) #publish the str in "robot_command"
 
         if 'id_num' in data.data:
-            behavior='Stand/Gestures/Hey_6'#todo
+            behavior='aom/id_num'
             if self.ulanguage=='English':
                 text='Please Insert your ID number.'
             else:
@@ -49,7 +54,7 @@ class Brain_Node():
             self.robot_command.publish(pub) #publish the str in "robot_command"
 
         if 'invalid' in data.data:
-            behavior='Stand/Gestures/Hey_6' #todo
+            behavior='aom/invalid'
             if self.ulanguage=='English':
                 text='Oh, wrong input. Please insert again'
             else:
@@ -57,12 +62,22 @@ class Brain_Node():
             pub=self.make_str(behavior,text) #make publish str
             self.robot_command.publish(pub)  #publish the str in "robot_command"
 
-        if 'choice' in data.data:
-            behavior='Stand/Gestures/Hey_6' #todo
+        if 'choice' in data.data and self.choice==True:
+            behavior='aom/decision' #todo
+            if self.ulanguage=='English':
+                text='Can I help you with anything else?'
+            else:
+                text='Puedo ayudarle con cualquier otra cosa?'
+            pub=self.make_str(behavior,text) #make publish str
+            self.robot_command.publish(pub)  #publish the str in "robot_command"
+
+        if 'choice' in data.data and self.choice==False:
+            behavior='aom/choice'
             if self.ulanguage=='English':
                 text='Hello '+ self.uname +',' + ' Please choose the requested service.'
             else:
                 text='Hola '+ self.uname +',' + ' por favor seleccione el servicio solicitado.'
+            self.choice=True
             pub=self.make_str(behavior,text) #make publish str
             self.robot_command.publish(pub)  #publish the str in "robot_command"
 
@@ -76,7 +91,7 @@ class Brain_Node():
             self.robot_command.publish(pub)  #publish the str in "robot_command"
 
         if 'vaccination' in data.data:
-            behavior='Stand/Gestures/Hey_6' #todo
+            behavior='aom/up_right'
             if self.ulanguage=='English':
                 text='The vaccination room is on the 2nd floor, on the right, next to the elevator'
             else:
@@ -99,15 +114,6 @@ class Brain_Node():
                 text='The reception is on the 1st floor, to the left'
             else:
                 text='La recepcion esta en la primera planta, a la izquierda'
-            pub=self.make_str(behavior,text) #make publish str
-            self.robot_command.publish(pub)  #publish the str in "robot_command"
-
-        if 'decision' in data.data:          #todo
-            behavior='Stand/Gestures/Hey_6' #todo
-            if self.ulanguage=='English':
-                text='Can I help you with anything else?'
-            else:
-                text='Puedo ayudarle con cualquier otra cosa?'
             pub=self.make_str(behavior,text) #make publish str
             self.robot_command.publish(pub)  #publish the str in "robot_command"
 
