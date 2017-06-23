@@ -6,8 +6,9 @@ import almath
 import time
 import datetime
 
-robotIP='192.168.0.104'
+robotIP='192.168.0.107'
 port=9559
+managerProxy = ALProxy("ALBehaviorManager", robotIP, port)
 
 motionProxy = ALProxy("ALMotion", robotIP, port)
 audioProxy = ALProxy("ALAudioPlayer", robotIP, port)
