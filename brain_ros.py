@@ -100,7 +100,7 @@ class Brain_Node():
             self.robot_command.publish(pub)  #publish the str in "robot_command"
 
         if 'toilet' in data.data:
-            behavior='Stand/Gestures/Hey_6' #todo
+            behavior='aom/right'
             if self.ulanguage=='English':
                 text='The toilet is on the 1st floor, on your right, next to the vending machine.'
             else:
@@ -109,7 +109,7 @@ class Brain_Node():
             self.robot_command.publish(pub)  #publish the str in "robot_command"
 
         if 'reception' in data.data:
-            behavior='Stand/Gestures/Hey_6' #todo
+            behavior='aom/left'
             if self.ulanguage=='English':
                 text='The reception is on the 1st floor, to the left'
             else:
